@@ -11,6 +11,7 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 
+from app.core.langgraph.tools import all_tools
 from app.core.langgraph.graph import graph_app
 
 router = APIRouter()
@@ -32,6 +33,21 @@ class UploadResponse(BaseModel):
     message: str
 
 # --- Endpoints ---
+
+@router.get("/tools")
+def get_available_tools():
+    """
+    Returns a list of available tools and their schemas.
+    The frontend can use this to show 'Suggested Actions' or forms.
+    """
+    tool_definitions = []
+    for tool in all_tools:
+        tool_definitions.append({
+            "name": tool.name,
+            "description": tool.description,
+            "args": tool.args
+        })
+    return {"tools": tool_definitions}
 
 @router.post("/upload", response_model=UploadResponse)
 async def upload_file(file: UploadFile = File(...)):
