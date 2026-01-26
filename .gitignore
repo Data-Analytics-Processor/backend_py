@@ -1,0 +1,13 @@
+.env
+*.env
+.env.*
+
+.vscode
+.venv
+
+__pycache__
+
+app/__pycache__
+app/*/__pycache__
+
+logs/
