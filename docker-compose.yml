@@ -10,3 +10,10 @@ services:
     # Tells Docker Compose to read environment variables from a .env file in the same directory
     env_file:
       - .env
+
+    environment:
+      - APP_ENV=${APP_ENV}
+      - DEBUG=${DEBUG}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LLM_MODEL=${LLM_MODEL}
+      - DEFAULT_LLM_TEMPERATURE=${DEFAULT_LLM_TEMPERATURE}
