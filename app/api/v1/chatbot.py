@@ -7,12 +7,14 @@ streaming chat, message history management, and chat history clearing.
 import shutil
 import os
 from pathlib import Path
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 
 from app.core.langgraph.tools import all_tools
 from app.core.langgraph.graph import graph_app
+
+from app.api.v1.auth import get_current_user
 
 router = APIRouter()
 
@@ -35,7 +37,7 @@ class UploadResponse(BaseModel):
 # --- Endpoints ---
 
 @router.get("/tools")
-def get_available_tools():
+def get_available_tools(current_user: Any = Depends(get_current_user)):
     """
     Returns a list of available tools and their schemas.
     The frontend can use this to show 'Suggested Actions' or forms.
@@ -50,7 +52,10 @@ def get_available_tools():
     return {"tools": tool_definitions}
 
 @router.post("/upload", response_model=UploadResponse)
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    current_user: Any = Depends(get_current_user)
+):
     """
     Simple file upload. Returns the path so the frontend can send it back in /chat.
     """
@@ -72,7 +77,10 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+async def chat(
+    request: ChatRequest,
+    current_user: Any = Depends(get_current_user)
+):
     try:
         config = {"configurable": {"thread_id": request.session_id}}
         

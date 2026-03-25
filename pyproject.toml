@@ -11,7 +11,6 @@ dependencies = [
     "langfuse>=2.60.2",
     "langgraph>=0.3.21",
     "langgraph-checkpoint-postgres>=2.0.19",
-    "passlib[bcrypt]>=1.7.4",
     "psycopg2-binary>=2.9.10",
     "pydantic[email]>=2.11.1",
     "pydantic-settings>=2.8.1",
